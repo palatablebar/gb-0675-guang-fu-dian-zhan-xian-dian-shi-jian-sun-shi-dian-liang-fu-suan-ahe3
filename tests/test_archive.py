@@ -14,6 +14,6 @@ def test_unknown_blocks(clean):
 def test_bad_energy_blocks(clean):
     s=deepcopy(clean);s['balance']['energy_balanced']=False;assert archive_decision(s)['status']=='待复核'
 def test_bundle_has_isolation(sample):
-    z=zipfile.ZipFile(io.BytesIO(serialize(sample)));e=json.loads(z.read('evidence.json'));assert len(e['quarantine'])==5
+    z=zipfile.ZipFile(io.BytesIO(serialize(sample)));e=json.loads(z.read('evidence.json'));assert len(e['quarantine'])==6
 def test_bundle_manifest(clean):
     z=zipfile.ZipFile(io.BytesIO(serialize(clean)));assert json.loads(z.read('manifest.json'))['sha256']==clean['manifest']['sha256']

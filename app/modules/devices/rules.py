@@ -3,6 +3,9 @@ from app.errors import BusinessError
 from app.reasons import reject
 from collections import defaultdict
 
+STORAGE_STATUSES={'限电充电':'充电','常规充电':'充电','储能自用':'放电','储能上网':'放电'}
+TELEMETRY_STATUSES={'健康','故障'}
+
 def normalize(row,context):
     if row['device'] not in context['devices']:raise BusinessError('UNKNOWN_DEVICE','设备不存在')
     device=context['devices'][row['device']]
@@ -10,12 +13,22 @@ def normalize(row,context):
         start,end=instant(row['start']),instant(row['end'])
         if not start<end or (end-start).total_seconds()>86400:raise BusinessError('INVALID_RANGE','限电区间无效或超过24小时')
         return {**row,'start':start.isoformat(),'end':end.isoformat(),'zone':device['zone']}
+    if row['kind']=='STORAGE':
+        if not device.get('storage'):raise BusinessError('NOT_STORAGE','该设备不是储能设备')
+        if row['status'] not in STORAGE_STATUSES:raise BusinessError('BAD_STATUS','储能状态无效')
+        factor={'kW':1,'MW':1000}.get(row['unit'])
+        if factor is None:raise BusinessError('BAD_UNIT','功率单位无效')
+        power=number(row['power'])*factor
+        if power<0 or power>number(device['capacity_kw'])*number('1.2'):raise BusinessError('INVALID_RANGE','功率超出范围')
+        at=instant(row['at'])
+        return {**row,'at':at.isoformat(),'power_kw':str(power),'irradiance':'','zone':device['zone'],
+                'direction':STORAGE_STATUSES[row['status']],'purpose':row['status']}
     if row['kind']!='TELEMETRY':raise BusinessError('BAD_KIND','记录类型无效')
     factor={'kW':1,'MW':1000}.get(row['unit'])
     if factor is None:raise BusinessError('BAD_UNIT','功率单位无效')
     power=number(row['power'])*factor;irr=number(row['irradiance'])
     if power<0 or irr<0 or power>number(device['capacity_kw'])*number('1.2'):raise BusinessError('INVALID_RANGE','功率或辐照度超出范围')
-    if row['status'] not in {'健康','故障'}:raise BusinessError('BAD_STATUS','设备状态无效')
+    if row['status'] not in TELEMETRY_STATUSES:raise BusinessError('BAD_STATUS','设备状态无效')
     return {**row,'at':instant(row['at']).isoformat(),'power_kw':str(power),'irradiance':str(irr),'zone':device['zone']}
 def apply(state):
     good=[]

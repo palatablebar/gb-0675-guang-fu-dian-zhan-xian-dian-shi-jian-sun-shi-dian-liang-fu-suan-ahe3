@@ -5,6 +5,7 @@
     "slicing",
     "baseline",
     "loss",
+    "storage",
     "reconcile",
     "archive"
   ],
@@ -38,6 +39,20 @@
       "zone": "西区",
       "capacity_kw": "50",
       "reference": true
+    },
+    "BESS-E": {
+      "zone": "东区",
+      "capacity_kw": "200",
+      "reference": false,
+      "storage": true,
+      "round_trip": "0.9"
+    },
+    "BESS-D": {
+      "zone": "东区",
+      "capacity_kw": "200",
+      "reference": false,
+      "storage": true,
+      "round_trip": "0.9"
     }
   },
   "cadence_seconds": 600,

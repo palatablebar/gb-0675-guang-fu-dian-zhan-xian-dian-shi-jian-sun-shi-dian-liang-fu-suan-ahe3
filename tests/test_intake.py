@@ -23,4 +23,4 @@ def test_three_empty_types():
         with pytest.raises(BusinessError) as e:evaluate({'csv_text':text})
         assert e.value.code==code
 def test_source_rows_real(clean):
-    assert clean['counts']['input']==33
+    assert clean['counts']['input']==41

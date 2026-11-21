@@ -2,7 +2,7 @@ from app.modules.reconcile.rules import reconcile
 from copy import deepcopy
 
 def test_input_rows_real(sample):
-    assert sample['balance']['input']==40;assert sample['balance']['accepted']==32;assert sample['balance']['quarantined']==5;assert sample['balance']['row_balanced']
+    assert sample['balance']['input']==50;assert sample['balance']['accepted']==41;assert sample['balance']['quarantined']==6;assert sample['balance']['row_balanced']
 def test_clean_energy_real(clean):
     assert clean['balance']['loss_kwh']=='26.6667';assert clean['balance']['actual_kwh']=='40.0000';assert clean['balance']['energy_balanced']
 def test_unknown_time_real(sample):

@@ -4,6 +4,7 @@ REASONS = {
     'BAD_UNIT':'单位不受支持', 'UNKNOWN_REFERENCE':'引用对象不存在', 'INVALID_RANGE':'范围错误',
     'VERSION_CONFLICT':'版本冲突', 'EMPTY_FILE':'空文件', 'BLANK_FILE':'全空行',
     'HEADER_ONLY':'仅有表头', 'STALE_VERSION':'复核版本已更新', 'NOT_FOUND':'批次不存在',
+    'NOT_STORAGE':'非储能设备', 'ORIGIN_SHORTAGE':'放电来历不足', 'BAD_STATUS':'状态无效',
 }
 def reject(state, record, code, detail):
     state['quarantine'].append({'line':record.get('_line',0),'id':record.get('id',''),
